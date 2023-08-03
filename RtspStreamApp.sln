@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RtspStreamApp", "RtspStreamApp.csproj", "{BDAA1A2A-8134-4CD5-BDF4-02B05C588406}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BDAA1A2A-8134-4CD5-BDF4-02B05C588406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDAA1A2A-8134-4CD5-BDF4-02B05C588406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDAA1A2A-8134-4CD5-BDF4-02B05C588406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDAA1A2A-8134-4CD5-BDF4-02B05C588406}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E79E41A5-E195-48B7-AD14-2D0F76A8F08C}
+	EndGlobalSection
+EndGlobal
