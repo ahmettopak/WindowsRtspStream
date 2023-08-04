@@ -12,27 +12,38 @@ namespace RtspStreamApp {
        
         public Form1() {
             InitializeComponent();
+            InitializeCombobox();
         }
-
+        string[] cameraUrl = {
+                "rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=0.sdp?",
+                "rtsp://192.168.1.10:554/user=admin&password=&channel=2&stream=0.sdp?",
+                "rtsp://192.168.1.10:554/user=admin&password=&channel=3&stream=0.sdp?",
+                "rtsp://192.168.1.10:554/user=admin&password=&channel=4&stream=0.sdp?",
+                "rtsp://192.168.1.10:554/user=admin&password=&channel=5&stream=0.sdp?"
+            };
         private void Form1_Load(object sender, EventArgs e) {
             InitializeVlcControl();
-            //InitializeJoystick();
-            //SetupJoystickTimer();
+            leftCameraComboBox.SelectedIndex = 0;
+            rightCameraComboBox.SelectedIndex = 0;
 
-            InitializeController();
-            SetupControllerTimer();
+            //InitializeController();
+            //SetupControllerTimer();
+
+            //Right Video View Full Size
+            panel1.SendToBack();
+            panel1.Size = this.ClientSize;
         }
 
         #region VlcStream
 
 
-        private VlcControl vlcControl;
-        private VlcControl vlcControl1;
+        private VlcControl vlcControlLeft;
+        private VlcControl vlcControlRight;
 
         private void InitializeVlcControl()
         {
-            vlcControl = new VlcControl();
-            vlcControl1 = new VlcControl();
+            vlcControlLeft = new VlcControl();
+            vlcControlRight = new VlcControl();
 
             var vlcArgs = new List<string>
     {
@@ -48,28 +59,28 @@ namespace RtspStreamApp {
     };
 
 
-            vlcControl.BeginInit();
-            vlcControl.VlcMediaplayerOptions = vlcArgs.ToArray();
-            vlcControl.VlcLibDirectory = new DirectoryInfo(@"C:\Program Files (x86)\VideoLAN\VLC"); // VLC kütüphane dizini
-            vlcControl.EndInit();
-            vlcControl.Dock = DockStyle.Fill;
-            panel1.Controls.Add(vlcControl); // RTSP yayınını göstermek için bir Panel kontrolü ekleyin
+            vlcControlLeft.BeginInit();
+            vlcControlLeft.VlcMediaplayerOptions = vlcArgs.ToArray();
+            vlcControlLeft.VlcLibDirectory = new DirectoryInfo(@"C:\Program Files (x86)\VideoLAN\VLC"); // VLC kütüphane dizini
+            vlcControlLeft.EndInit();
+            vlcControlLeft.Dock = DockStyle.Fill;
+            panel1.Controls.Add(vlcControlLeft); // RTSP yayınını göstermek için bir Panel kontrolü ekleyin
 
 
-            vlcControl1.BeginInit();
-            vlcControl1.VlcMediaplayerOptions = vlcArgs.ToArray();
-            vlcControl1.VlcLibDirectory = new DirectoryInfo(@"C:\Program Files (x86)\VideoLAN\VLC"); // VLC kütüphane dizini
-            vlcControl1.EndInit();
-            vlcControl1.Dock = DockStyle.Fill;
-            panel2.Controls.Add(vlcControl1); // RTSP yayınını göstermek için bir Panel kontrolü ekleyin
+            vlcControlRight.BeginInit();
+            vlcControlRight.VlcMediaplayerOptions = vlcArgs.ToArray();
+            vlcControlRight.VlcLibDirectory = new DirectoryInfo(@"C:\Program Files (x86)\VideoLAN\VLC"); // VLC kütüphane dizini
+            vlcControlRight.EndInit();
+            vlcControlRight.Dock = DockStyle.Fill;
+            panel2.Controls.Add(vlcControlRight); // RTSP yayınını göstermek için bir Panel kontrolü ekleyin
         }
 
-        private void StartCapture(string rtspUrl)
+        private void StartLeftVideo(string rtspUrl)
         {
-            if (vlcControl != null)
+            if (vlcControlLeft != null)
             {
-                vlcControl.Stop(); // Önceki medya durduruluyor
-                vlcControl.Play(new Uri(rtspUrl));
+                vlcControlLeft.Stop(); // Önceki medya durduruluyor
+                vlcControlLeft.Play(new Uri(rtspUrl));
             }
 
 
@@ -77,89 +88,27 @@ namespace RtspStreamApp {
 
         private void StartRightVideo(string rtspUrl)
         {
-            if (vlcControl1 != null)
+            if (vlcControlRight != null)
             {
-                vlcControl1.Stop(); // Önceki medya durduruluyor
-                vlcControl1.Play(new Uri(rtspUrl));
+                vlcControlRight.Stop(); // Önceki medya durduruluyor
+                vlcControlRight.Play(new Uri(rtspUrl));
             }
         }
 
         private void StopCapture()
         {
-            if (vlcControl != null)
+            if (vlcControlLeft != null)
             {
-                vlcControl.Stop();
+                vlcControlLeft.Stop();
             }
         }
-        #endregion
+        #endregion 
 
-        //private DirectInput directInput;
-        //private Joystick joystick;
 
-        //private void InitializeJoystick()
-        //{
-        //    directInput = new DirectInput();
-
-        //    // Joystick cihazlarını taramak için DirectInput'i kullanın
-        //    var joystickGuid = Guid.Empty;
-        //    var availableDevices = directInput.GetDevices(DeviceType.Joystick, DeviceEnumerationFlags.AllDevices);
-        //    foreach (var deviceInstance in availableDevices)
-        //    {
-        //        joystickGuid = deviceInstance.InstanceGuid;
-        //        break; // İlk bulunan joystick'i kullanıyoruz
-        //    }
-
-        //    if (joystickGuid == Guid.Empty)
-        //    {
-        //        MessageBox.Show("Joystick bulunamadı!  " + availableDevices.Count);
-        //        return;
-        //    }
-
-        //    joystick = new Joystick(directInput, joystickGuid);
-        //    joystick.Properties.BufferSize = 128; // Giriş verilerini depolamak için önbellek boyutu
-
-        //    // Joystick'i başlat
-        //    try
-        //    {
-        //        joystick.Acquire();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Joystick başlatılırken bir hata oluştu: " + ex.Message);
-        //    }
-        //}
-
-        //private void ReadJoystickInput()
-        //{
-        //    if (joystick == null)
-        //        return;
-
-        //    joystick.Poll();
-        //    var joystickState = joystick.GetCurrentState();
-
-        //    // Joystick verilerini işleyin
-        //    int xAxis = joystickState.X;
-        //    int yAxis = joystickState.Y;
-        //    int zAxis = joystickState.Z;
-        //   // int[] buttons = joystickState.get;
-
-        //    // Burada yapmak istediğiniz işlemi gerçekleştirin veya verileri görselleştirin
-        //    // Örneğin: Eksen verilerini label'larda veya ProgressBar'larda göstermek, buton durumlarını değerlendirmek, vb.
-        //}
-
-        //private Timer joystickTimer;
-
-        //private void SetupJoystickTimer()
-        //{
-        //    joystickTimer = new Timer();
-        //    joystickTimer.Interval = 100; // 100 ms aralıklarla veri alacak
-        //    joystickTimer.Tick += (sender, e) => ReadJoystickInput();
-        //    joystickTimer.Start();
-        //}
-
+        #region Joystick
         private Controller controller;
         private UserIndex playerIndex = UserIndex.One; // Eğer birden fazla controller varsa, uygun playerIndex'i seçin.
-
+        private Timer controllerTimer;
         private void InitializeController()
         {
             try
@@ -200,11 +149,11 @@ namespace RtspStreamApp {
             bool buttonB = (gamepadState.Buttons & GamepadButtonFlags.B) != 0;
             bool buttonX = (gamepadState.Buttons & GamepadButtonFlags.X) != 0;
             bool buttonY = (gamepadState.Buttons & GamepadButtonFlags.Y) != 0;
-          
-            label1.Text = NormalizeAxisValue(leftThumbX)  + " " + NormalizeAxisValue(leftThumbY);
+
+            // label1.Text = NormalizeAxisValue(leftThumbX)  + " " + NormalizeAxisValue(leftThumbY);
         }
 
-        private Timer controllerTimer;
+
 
         private void SetupControllerTimer()
         {
@@ -222,17 +171,39 @@ namespace RtspStreamApp {
             return (axisValue - minAxisValue) / ((maxAxisValue - minAxisValue) / 2f) - 1f;
         }
 
-        private void startButton_Click(object sender, EventArgs e) {
-            string rtspUrl = "rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=0.sdp?";
-            string rtspUrl1 = "rtsp://192.168.1.10:554/user=admin&password=&channel=3&stream=0.sdp?";
-            StartCapture(rtspUrl);
-            StartRightVideo(rtspUrl1);
+        #endregion
+
+        private void InitializeCombobox()
+        {
+            string[] cameraName = { "Ön", "Arka", "Nişan", "Kıskaç", "PTZ" };
+      
+
+            leftCameraComboBox.Items.Clear();
+            foreach (string value in cameraName)
+            {
+                leftCameraComboBox.Items.Add(value);
+            }
+
+            rightCameraComboBox.Items.Clear();
+            foreach (string value in cameraName)
+            {
+                rightCameraComboBox.Items.Add(value);
+            }
 
 
         }
+        private void rightCameraComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            StartRightVideo(cameraUrl[rightCameraComboBox.SelectedIndex]);
+        }
 
-        private void stopButton_Click(object sender, EventArgs e) {
-            StopCapture();
+        private void leftCameraComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            StartLeftVideo(cameraUrl[leftCameraComboBox.SelectedIndex]);
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
 
         }
     }
